@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/product.dart';
+import '../models/sales_transaction.dart';
 
 class DBHelper {
   static final DBHelper _instance = DBHelper._internal();
@@ -63,5 +64,35 @@ class DBHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  // Insert Sales Transaction
+  Future<int> insertSalesTransaction(SalesTransaction transaction) async {
+    final db = await database;
+    return await db.insert('sales_transactions', transaction.toMap());
+  }
+
+  // Get Sales Transactions by Day
+  Future<List<SalesTransaction>> getSalesTransactionsByDay(DateTime day) async {
+    final db = await database;
+    String date = day.toIso8601String().substring(0, 10); // Only use YYYY-MM-DD
+    var result = await db.query(
+      'sales_transactions',
+      where: 'date LIKE ?',
+      whereArgs: ['%$date%'],
+    );
+    return result.map((data) => SalesTransaction.fromMap(data)).toList();
+  }
+
+  // Get Sales Transactions by Month
+  Future<List<SalesTransaction>> getSalesTransactionsByMonth(DateTime month) async {
+    final db = await database;
+    String date = month.toIso8601String().substring(0, 7); // Only use YYYY-MM
+    var result = await db.query(
+      'sales_transactions',
+      where: 'date LIKE ?',
+      whereArgs: ['%$date%'],
+    );
+    return result.map((data) => SalesTransaction.fromMap(data)).toList();
   }
 }
