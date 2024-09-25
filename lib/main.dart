@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'providers/product_provider.dart';
 import 'providers/sales_provider.dart';
+import 'screens/product_checkout_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,11 @@ class MyApp extends StatelessWidget {
               theme: ThemeData.light(),
               darkTheme: ThemeData.dark(),
               themeMode: EasyDynamicTheme.of(context).themeMode,
-              home: const ProductScreen(),
+              home: const ProductCheckoutScreen(
+                productName: 'Ayam',
+                totalPrice: 25000,
+                quantity: 25,
+              ),
             ),
           );
         },
